@@ -10,14 +10,33 @@ public interface ITestMarket
 }
 */
 
+/*
+public interface ISupplier
+{
+    string Name { get; }
+    float Supply(float price);
+}
+
+public interface IDemander
+{
+    string Name { get; }
+    float Demand(float price);
+}
+*/
+
 public abstract class MarketBehaviour : MonoBehaviour
 {
+
+    // public string Name = "Trade Good";
+
     public abstract float Demand(float p);
     public abstract float Supply(float p);
 }
 
 public class TestCottonBehaviour : MarketBehaviour
 {
+    public Market textileMarket;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +49,6 @@ public class TestCottonBehaviour : MarketBehaviour
         
     }
 
-    public override float Demand(float p) => TestCurve.DemandCotton(p, TestCurve.initialTextilePrice);
+    public override float Demand(float p) => TestCurve.DemandCotton(p, textileMarket.prevPrice);
     public override float Supply(float p) => TestCurve.SupplyCotton(p);
 }

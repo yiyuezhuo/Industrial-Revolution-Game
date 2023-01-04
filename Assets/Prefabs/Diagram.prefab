@@ -570,7 +570,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.01, y: -0.58}
+  m_AnchoredPosition: {x: -0.000000070781, y: -0.552}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6701791465111610027
@@ -1136,6 +1136,7 @@ MonoBehaviour:
   priceLim: {x: 0.5, y: 3}
   quantityLim: {x: 0, y: 3}
   samples: 100
+  market: {fileID: 0}
 --- !u!212 &7311707060734730439
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1223,7 +1224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.55, y: -0.63}
+  m_AnchoredPosition: {x: 0.531, y: -0.552}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7311707061099804928
@@ -1358,7 +1359,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.62, y: -0.62}
+  m_AnchoredPosition: {x: -0.552, y: -0.552}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7311707061530158721

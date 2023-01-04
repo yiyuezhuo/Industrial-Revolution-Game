@@ -75,9 +75,16 @@ public class Market : MonoBehaviour
 
     public int samples = 100;
 
+    public GameManager gameManager;
+
     Func<float, float> Demand { get => market.Demand; }
     Func<float, float> Supply { get => market.Supply; }
     public MarketBehaviour market;
+
+    public float prevPrice = 1;
+    public float newPrice = 1;
+
+    public event EventHandler<float> prevPriceChanged;
 
     // Start is called before the first frame update
     void Start()
@@ -90,7 +97,10 @@ public class Market : MonoBehaviour
         // Demand = TestCurve.DemandTextile;
         // Supply = (textilePrice) => TestCurve.SupplyTextile(textilePrice, TestCurve.initialCottonPrice);
 
-        Sync();
+        // Sync();
+
+        gameManager.TurnIncreased += Step;
+        gameManager.TurnIncreasedPost += StepPost;
     }
 
     float[] PriceLinspace(Vector2 priceLim)
@@ -109,7 +119,18 @@ public class Market : MonoBehaviour
         return (float)Demand((float)p) - Supply((float)p);
     }
 
-    void Sync()
+    void Step(object sender, int turn)
+    {
+        newPrice = Sync();
+    }
+
+    void StepPost(object sender, int turn)
+    {
+        prevPriceChanged?.Invoke(this, newPrice);
+        prevPrice = newPrice;
+    }
+
+    float Sync()
     {
         // DEBUG
         /*
@@ -173,6 +194,8 @@ public class Market : MonoBehaviour
         var dd = demandPrice.Select(p => Demand(p) - Supply(p)).ToArray();
         Debug.Log($"dp={dp}, sp={sp}");
         */
+
+        return rootPrice;
     }
 
     // Update is called once per frame

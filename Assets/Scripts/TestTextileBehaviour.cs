@@ -5,6 +5,8 @@ using UnityEngine;
 public class TestTextileBehaviour : MarketBehaviour
 {
     // Start is called before the first frame update
+    public Market cottonMarket;
+
     void Start()
     {
         
@@ -17,6 +19,6 @@ public class TestTextileBehaviour : MarketBehaviour
     }
 
     public override float Demand(float p) => TestCurve.DemandTextile(p);
-    public override float Supply(float p) => TestCurve.SupplyTextile(p, TestCurve.initialCottonPrice);
+    public override float Supply(float p) => TestCurve.SupplyTextile(p, cottonMarket.prevPrice);
 
 }
