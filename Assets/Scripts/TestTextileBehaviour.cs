@@ -18,7 +18,7 @@ public class TestTextileBehaviour : MarketBehaviour
         
     }
 
-    public override float Demand(float p) => TestCurve.DemandTextile(p);
-    public override float Supply(float p) => TestCurve.SupplyTextile(p, cottonMarket.prevPrice);
+    public override double Demand(double p) => TestCurve.DemandTextile(p);
+    public override double Supply(double p) => TestCurve.SupplyTextile(p, cottonMarket.prevPrice);
 
 }

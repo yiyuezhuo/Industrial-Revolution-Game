@@ -9,51 +9,51 @@ using MathNet.Numerics.RootFinding;
 
 public static class TestCurve
 {
-    public static float SupplyCotton(float priceCotton)
+    public static double SupplyCotton(double priceCotton)
     {
-        return Mathf.Sqrt(Mathf.Max(priceCotton - 0.2f, 0));
+        return Math.Sqrt(Math.Max(priceCotton - 0.2, 0));
     }
 
-    public static float SupplyTextileWorkshop(float priceTextile, float priceCotton)
-    {
-        var price = priceTextile - priceCotton;
-        return Mathf.Sqrt(Mathf.Max(price - 0.2f, 0));
-    }
-
-    public static float SupplyTextileFactory(float priceTextile, float priceCotton)
+    public static double SupplyTextileWorkshop(double priceTextile, double priceCotton)
     {
         var price = priceTextile - priceCotton;
-        return Mathf.Pow(Mathf.Max(price, 0), 0.7f);
+        return Math.Sqrt(Math.Max(price - 0.2, 0));
     }
 
-    public static float DemandCottonWorkshop(float priceCotton, float priceTextile)
+    public static double SupplyTextileFactory(double priceTextile, double priceCotton)
+    {
+        var price = priceTextile - priceCotton;
+        return Math.Pow(Math.Max(price, 0), 0.7);
+    }
+
+    public static double DemandCottonWorkshop(double priceCotton, double priceTextile)
     {
         return SupplyTextileWorkshop(priceTextile, priceCotton);
     }
 
-    public static float DemandCottonFactory(float priceCotton, float priceTextile)
+    public static double DemandCottonFactory(double priceCotton, double priceTextile)
     {
         return SupplyTextileFactory(priceTextile, priceCotton);
     }
 
-    public static float DemandTextile(float priceTextile)
+    public static double DemandTextile(double priceTextile)
     {
         return 1 / priceTextile;
     }
 
-    public static float SupplyTextile(float priceTextile, float priceCotton)
+    public static double SupplyTextile(double priceTextile, double priceCotton)
     {
         return SupplyTextileWorkshop(priceTextile, priceCotton) + SupplyTextileFactory(priceTextile, priceCotton);
     }
 
-    public static float DemandCotton(float priceCotton, float priceTextile)
+    public static double DemandCotton(double priceCotton, double priceTextile)
     {
         return DemandCottonWorkshop(priceCotton, priceTextile) + DemandCottonFactory(priceCotton, priceTextile);
     }
 
-    public static float initialCottonPrice = 1f;
+    // public static double initialCottonPrice = 1;
     // public static float initialCottonPrice = 0.1f;
-    public static float initialTextilePrice = 2f;
+    // public static double initialTextilePrice = 2;
 }
 
 public class Market : MonoBehaviour
@@ -70,21 +70,25 @@ public class Market : MonoBehaviour
 
     // public Vector2 xlim = new Vector2(0.5f, 2.0f);
     // public Vector2 ylim = new Vector2(0.0f, 2.0f);
-    public Vector2 priceLim = new Vector2(0.2f, 3.0f);
-    public Vector2 quantityLim = new Vector2(0, 3.0f);
+    // public Vector2 priceLim = new Vector2(0.2f, 3.0f);
+    // public Vector2 quantityLim = new Vector2(0, 3.0f);
+    public double priceLimX = 0.2;
+    public double priceLimY = 3;
+    public double quantityLimX = 0;
+    public double quantityLimY = 3;
 
     public int samples = 100;
 
     public GameManager gameManager;
 
-    Func<float, float> Demand { get => market.Demand; }
-    Func<float, float> Supply { get => market.Supply; }
+    Func<double, double> Demand { get => market.Demand; }
+    Func<double, double> Supply { get => market.Supply; }
     public MarketBehaviour market;
 
-    public float prevPrice = 1;
-    public float newPrice = 1;
+    public double prevPrice = 1;
+    public double newPrice = 1;
 
-    public event EventHandler<float> prevPriceChanged;
+    public event EventHandler<double> prevPriceChanged;
 
     // Start is called before the first frame update
     void Start()
@@ -103,20 +107,20 @@ public class Market : MonoBehaviour
         gameManager.TurnIncreasedPost += StepPost;
     }
 
-    float[] PriceLinspace(Vector2 priceLim)
+    double[] PriceLinspace(double left, double right)
     {
-        var price = new float[samples];
-        var r = priceLim.y - priceLim.x;
-        var n = (float)samples;
+        var price = new double[samples];
+        var r = right - left;
+        var n = (double)samples;
         for (var i = 0; i < samples; i++)
-            price[i] = priceLim.x + r * (i / n);
+            price[i] = left + r * (i / n);
         return price;
     }
 
     double Objective(double p)
     {
         Debug.Log($"p={p}");
-        return (float)Demand((float)p) - Supply((float)p);
+        return Demand(p) - Supply(p);
     }
 
     void Step(object sender, int turn)
@@ -130,7 +134,7 @@ public class Market : MonoBehaviour
         prevPrice = newPrice;
     }
 
-    float Sync()
+    double Sync()
     {
         // DEBUG
         /*
@@ -141,41 +145,43 @@ public class Market : MonoBehaviour
 
         // Func<double, double> F = (p) => Demand((float)p) - Supply((float)p); // TODO: prevent those ugly casting
         // var rootPrice = (float)Secant.FindRoot(F, 1, 1.5, priceLim.x, priceLim.y);
-        
-        
-        var rootPrice = (float)Secant.FindRoot(Objective, 1, 1.5, priceLim.x, priceLim.y, 1e-4);
+
+
+        // var rootPrice = Secant.FindRoot(Objective, 1, 1.5, priceLimX, priceLimY, 1e-4);
+        // var rootPrice = Secant.FindRoot(Objective, 1, 2, priceLimX, priceLimY);
+        var rootPrice = Secant.FindRoot(Objective, 1, 2);
         var rootQuantity = Supply(rootPrice);
         Debug.Log($"rootPrice={rootPrice}, rootQuantity={rootQuantity}");
 
         priceLabel.text = rootPrice.ToString("0.##");
         quantityLabel.text = rootQuantity.ToString("0.##"); // = Demand(rootPrice)
 
-        priceLabel.transform.localPosition = new Vector3(priceLabel.transform.localPosition.x, rootPrice / priceLim.y - 0.5f, priceLabel.transform.localPosition.z);
-        quantityLabel.transform.localPosition = new Vector3(rootQuantity / quantityLim.y - 0.5f, quantityLabel.transform.localPosition.y, quantityLabel.transform.localPosition.z);
+        priceLabel.transform.localPosition = new Vector3(priceLabel.transform.localPosition.x, (float)(rootPrice / priceLimY - 0.5), priceLabel.transform.localPosition.z);
+        quantityLabel.transform.localPosition = new Vector3((float)(rootQuantity / quantityLimY - 0.5), quantityLabel.transform.localPosition.y, quantityLabel.transform.localPosition.z);
         
         rootVerticalLine.positionCount = 2;
         rootVerticalLine.SetPositions(new Vector3[] { 
-            new Vector3(rootQuantity / quantityLim.y, 0, 0),
-            new Vector3(rootQuantity / quantityLim.y, 1, 0)
+            new Vector3((float)(rootQuantity / quantityLimY), 0, 0),
+            new Vector3((float)(rootQuantity / quantityLimY), 1, 0)
         });
 
         rootHorizontalLine.positionCount = 2;
         rootHorizontalLine.SetPositions(new Vector3[] {
-            new Vector3(0, rootPrice / priceLim.y, 0),
-            new Vector3(1, rootPrice / priceLim.y, 0)
+            new Vector3(0, (float)(rootPrice / priceLimY), 0),
+            new Vector3(1, (float)(rootPrice / priceLimY), 0)
         });
         
 
-        var demandPrice = PriceLinspace(priceLim);
-        var quantityPrice = PriceLinspace(new Vector2(0, priceLim.y));
+        var demandPrice = PriceLinspace(priceLimX, priceLimY);
+        var quantityPrice = PriceLinspace(0, priceLimY);
 
         // var pr = priceLim.y - priceLim.x;
         // var qr = quantityLim.y - quantityLim.x;
         var demandPositions = demandPrice.Select(p =>
-            new Vector3(Demand(p) / quantityLim.y, p / priceLim.y, 0)
+            new Vector3((float)(Demand(p) / quantityLimY), (float)(p / priceLimY), 0)
         ).ToArray();
         var supplyPositions = quantityPrice.Select(p =>
-            new Vector3(Supply(p) / quantityLim.y, p / priceLim.y, 0)
+            new Vector3((float)(Supply(p) / quantityLimY), (float)(p / priceLimY), 0)
         ).ToArray();
 
         demandCurve.positionCount = samples;
@@ -184,8 +190,8 @@ public class Market : MonoBehaviour
         supplyCurve.positionCount = samples;
         supplyCurve.SetPositions(supplyPositions);
         
-        rightBottomLabel.text = quantityLim.y.ToString();
-        leftTopLabel.text = priceLim.y.ToString();
+        rightBottomLabel.text = quantityLimY.ToString();
+        leftTopLabel.text = priceLimY.ToString();
 
         // DEBUG
         /*

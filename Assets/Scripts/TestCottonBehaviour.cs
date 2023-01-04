@@ -29,8 +29,8 @@ public abstract class MarketBehaviour : MonoBehaviour
 
     // public string Name = "Trade Good";
 
-    public abstract float Demand(float p);
-    public abstract float Supply(float p);
+    public abstract double Demand(double p);
+    public abstract double Supply(double p);
 }
 
 public class TestCottonBehaviour : MarketBehaviour
@@ -49,6 +49,6 @@ public class TestCottonBehaviour : MarketBehaviour
         
     }
 
-    public override float Demand(float p) => TestCurve.DemandCotton(p, textileMarket.prevPrice);
-    public override float Supply(float p) => TestCurve.SupplyCotton(p);
+    public override double Demand(double p) => TestCurve.DemandCotton(p, textileMarket.prevPrice);
+    public override double Supply(double p) => TestCurve.SupplyCotton(p);
 }

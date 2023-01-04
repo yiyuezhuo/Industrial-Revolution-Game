@@ -18,10 +18,10 @@ public class TestFactory : TestSector
     void Sync()
     {
         RenderToUI(
-            new Dictionary<string, float>() {
+            new Dictionary<string, double>() {
                 { "Cotton", TestCurve.DemandCottonFactory(cottonMarket.newPrice, textileMarket.newPrice) }
             },
-            new Dictionary<string, float>() {
+            new Dictionary<string, double>() {
                 { "Textile", TestCurve.SupplyTextileFactory(textileMarket.newPrice, cottonMarket.newPrice) }
             }
         );

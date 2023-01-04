@@ -17,7 +17,7 @@ public class TestConsumer : TestSector
     void Sync()
     {
         RenderToUI(
-            new Dictionary<string, float>() {
+            new Dictionary<string, double>() {
                 { "Textile", TestCurve.DemandTextile(textileMarket.newPrice) }
             },
             null

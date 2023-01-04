@@ -12,14 +12,14 @@ public class TestSector: MonoBehaviour
         sector = GetComponent<Sector>();
     }
 
-    private string Render(string header, Dictionary<string, float> records)
+    private string Render(string header, Dictionary<string, double> records)
     {
         var lines = new List<string>() { header };
-        lines.AddRange(records.Select(KV => $"  {KV.Key}: {KV.Value}"));
+        lines.AddRange(records.Select(KV => $"  {KV.Key}: {KV.Value.ToString("0.###")}"));
         return string.Join("\n", lines);
     }
 
-    protected void RenderToUI(Dictionary<string, float> costRecords, Dictionary<string, float> produceRecords)
+    protected void RenderToUI(Dictionary<string, double> costRecords, Dictionary<string, double> produceRecords)
     {
         var lines = new List<string>();
         if (costRecords != null)
@@ -46,7 +46,7 @@ public class TestFarm : TestSector
     {
         RenderToUI(
             null, 
-            new Dictionary<string, float>() { 
+            new Dictionary<string, double>() { 
                 { "Cotton", TestCurve.SupplyCotton(cottonMarket.newPrice) } 
             }
         );
