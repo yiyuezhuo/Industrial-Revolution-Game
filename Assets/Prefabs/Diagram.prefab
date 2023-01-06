@@ -1133,10 +1133,15 @@ MonoBehaviour:
   quantityLabel: {fileID: 2898286598738791500}
   rootHorizontalLine: {fileID: 1787758658413401727}
   rootVerticalLine: {fileID: 6132480729299306120}
-  priceLim: {x: 0.5, y: 3}
-  quantityLim: {x: 0, y: 3}
+  priceLimX: 0.2
+  priceLimY: 3
+  quantityLimX: 0
+  quantityLimY: 3
   samples: 100
+  gameManager: {fileID: 0}
   market: {fileID: 0}
+  prevPrice: 1
+  newPrice: 1
 --- !u!212 &7311707060734730439
 SpriteRenderer:
   m_ObjectHideFlags: 0

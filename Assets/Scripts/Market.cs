@@ -177,17 +177,17 @@ public class Market : MonoBehaviour
 
         // var pr = priceLim.y - priceLim.x;
         // var qr = quantityLim.y - quantityLim.x;
-        var demandPositions = demandPrice.Select(p =>
+        var demandPositions = demandPrice.Where(p => Demand(p) <= quantityLimY && Demand(p) >= quantityLimX).Select(p =>
             new Vector3((float)(Demand(p) / quantityLimY), (float)(p / priceLimY), 0)
         ).ToArray();
-        var supplyPositions = quantityPrice.Select(p =>
+        var supplyPositions = quantityPrice.Where(p => Supply(p) <= quantityLimY && Supply(p) >= quantityLimX).Select(p =>
             new Vector3((float)(Supply(p) / quantityLimY), (float)(p / priceLimY), 0)
         ).ToArray();
 
-        demandCurve.positionCount = samples;
+        demandCurve.positionCount = demandPositions.Length;
         demandCurve.SetPositions(demandPositions);
 
-        supplyCurve.positionCount = samples;
+        supplyCurve.positionCount = supplyPositions.Length;
         supplyCurve.SetPositions(supplyPositions);
         
         rightBottomLabel.text = quantityLimY.ToString();

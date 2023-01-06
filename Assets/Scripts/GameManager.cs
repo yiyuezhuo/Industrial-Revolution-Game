@@ -10,16 +10,28 @@ public class GameManager : MonoBehaviour
 
     public int turn = 0;
 
+    public bool autorunning = false;
+    public float autorunnigSecondPerStep = 1;
+    public float elapsed = 0;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(autorunning)
+        {
+            elapsed += Time.deltaTime;
+            while(elapsed >= autorunnigSecondPerStep)
+            {
+                elapsed -= autorunnigSecondPerStep;
+                Step();
+            }
+        }
     }
 
     public void Step()
@@ -27,5 +39,16 @@ public class GameManager : MonoBehaviour
         turn += 1;
         TurnIncreased?.Invoke(this, turn);
         TurnIncreasedPost?.Invoke(this, turn);
+    }
+
+    public void StartAuoturun()
+    {
+        autorunning = true;
+    }
+
+    public void StopAutorun()
+    {
+        autorunning = false;
+        elapsed = 0;
     }
 }
