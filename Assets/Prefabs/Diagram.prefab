@@ -705,7 +705,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.674, y: 0}
+  m_AnchoredPosition: {x: -0.73, y: 0.27}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4840150405978297091
@@ -1138,10 +1138,8 @@ MonoBehaviour:
   quantityLimX: 0
   quantityLimY: 3
   samples: 100
-  gameManager: {fileID: 0}
-  market: {fileID: 0}
-  prevPrice: 1
-  newPrice: 1
+  marketValue: 0
+  dynamicBehaviour: {fileID: 0}
 --- !u!212 &7311707060734730439
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1607,7 +1605,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.04, y: -0.738}
+  m_AnchoredPosition: {x: 0.04, y: -0.66}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2782608964736130461

@@ -240,7 +240,7 @@ public class Dynamic
         for (var i = 0; i < solverSteps; i++)
         {
             foreach (var market in markets)
-                market.Step();
+                market.Step(); 
             foreach (var market in markets)
                 market.PostStep(solverDamping);
         }
