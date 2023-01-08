@@ -10,7 +10,18 @@ public class TimeSeries : MonoBehaviour
     public Transform lineContainer;
     public GameObject linePrefab;
 
-    double yLim;
+    double _yLim;
+    double yLim 
+    { 
+        get => _yLim; 
+        set
+        {
+            if (value == _yLim)
+                return;
+            _yLim = value;
+            yLimText.text = value.ToString("0.#");
+        } 
+    }
 
     public int samples = 100;
 
@@ -37,6 +48,7 @@ public class TimeSeries : MonoBehaviour
             var lineObj = Instantiate(linePrefab, lineContainer);
             // lineObj.transform.localPosition = new Vector3(-0.5f, -0.5f, 0);
             d.line = lineObj.GetComponent<LineRenderer>();
+            d.line.positionCount = 0; // reset preset placeholder points
             d.line.positionCount = samples;
 
             var gradient = new Gradient();
@@ -56,6 +68,8 @@ public class TimeSeries : MonoBehaviour
             gradient.SetKeys(colorKey, alphaKey);
             d.line.colorGradient = gradient;
         }
+
+        Sync();
     }
 
     public void Sync()
@@ -64,6 +78,10 @@ public class TimeSeries : MonoBehaviour
             return;
 
         var n = data[0].data.Count;
+
+        if (n == 0)
+            return;
+
         var step = ((float)n) / samples;
         foreach(var d in data)
         {
@@ -71,6 +89,7 @@ public class TimeSeries : MonoBehaviour
             for(var i = 0; i < samples; i++)
             {
                 var idx = (int)System.Math.Floor(i * step);
+                // Debug.Log($"idx={idx}");
                 var x = (float)i / samples;
                 var y = d.data[idx] / yLim;
                 positions[i] = new Vector3(x, (float)y, 0);
@@ -88,6 +107,35 @@ public class TimeSeries : MonoBehaviour
             if (r > yLim)
                 yLim = r;
         }
+    }
+
+    public void DropHalfLog()
+    {
+        if (data.Length == 0)
+            return;
+
+        var n = data[0].data.Count;
+
+        if (n <= 1)
+            return;
+
+        var dropNum = n / 2; // floor division
+
+        foreach(var d in data)
+        {
+            d.data = d.data.Skip(dropNum).ToList();
+        }
+
+        var newYLim = double.NegativeInfinity;
+        foreach(var d in data)
+        {
+            var max = d.data.Max();
+            if (max > newYLim)
+                newYLim = max;
+        }
+        yLim = newYLim;
+
+        Sync();
     }
 
     // Start is called before the first frame update

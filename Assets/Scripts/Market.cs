@@ -115,6 +115,8 @@ public class Market : MonoBehaviour
         dynamicBehaviour.d.stepEvent += (sender, args) => Sync();
 
         market = dynamicBehaviour.d.marketMap[marketValue];
+
+        Sync();
     }
 
     double[] PriceLinspace(double left, double right)
@@ -131,7 +133,7 @@ public class Market : MonoBehaviour
     {
         var rootPrice = market.FindRoot();
         var rootQuantity = market.Supply(rootPrice);
-        Debug.Log($"rootPrice={rootPrice}, rootQuantity={rootQuantity}");
+        // Debug.Log($"rootPrice={rootPrice}, rootQuantity={rootQuantity}");
 
         priceLabel.text = rootPrice.ToString("0.##");
         quantityLabel.text = rootQuantity.ToString("0.##"); // = Demand(rootPrice)

@@ -236,15 +236,20 @@ public class Dynamic
 
     public void Step()
     {
+        LogicStep();
+        stepEvent?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void LogicStep()
+    {
         var markets = new MarketNode[] { cotton, workhour, textile };
         for (var i = 0; i < solverSteps; i++)
         {
             foreach (var market in markets)
-                market.Step(); 
+                market.Step();
             foreach (var market in markets)
                 market.PostStep(solverDamping);
         }
-        stepEvent?.Invoke(this, EventArgs.Empty);
     }
 
     public enum MarketValue
@@ -277,12 +282,18 @@ public class DynamicBehaviour : MonoBehaviour
 {
     public Dynamic d = new Dynamic();
     public GameManager gameManager;
+    public int initLogicSteps = 0;
+    public int initSteps = 1;
 
     // Use this for initialization
     // void Start()
     void Awake()
     {
         d.Init();
+        for(var i=0; i<initLogicSteps; i++)
+            d.LogicStep();
+        for (var i = 0; i < initSteps; i++)
+            d.Step();
     }
 
     private void Start()

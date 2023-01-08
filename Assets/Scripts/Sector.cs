@@ -18,6 +18,8 @@ public class Sector : MonoBehaviour
     {
         producerNode = dynamicBehaviour.d.producerMap[producerValue];
         dynamicBehaviour.d.stepEvent += (sender, args) => Sync();
+
+        Sync();
     }
 
     // Update is called once per frame
