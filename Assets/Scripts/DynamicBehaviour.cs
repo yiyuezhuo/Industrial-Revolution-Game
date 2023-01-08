@@ -45,7 +45,7 @@ public class Producer
 
 public class DopamineProducer : Producer
 {
-    public double textileDemandCoef = 1;
+    public double demandCoef = 1;
 
     public override double Supply(double outputPrice, IEnumerable<double> inputPrices)
     {
@@ -56,7 +56,7 @@ public class DopamineProducer : Producer
             cost += costCoef[idx] * inputPrice;
             idx += 1;
         }
-        return textileDemandCoef / cost;
+        return demandCoef / cost;
     }
 }
 
@@ -110,6 +110,15 @@ public class MarketNode
     }
 
     public double Objective(double testPrice) => Supply(testPrice) - Demand(testPrice);
+    /*
+    public double Objective(double testPrice)
+    {
+        var s = Supply(testPrice);
+        var d = Demand(testPrice);
+        Debug.Log($"testPrice={testPrice}, s={s}, d={d} s-d={s-d}");
+        return s - d;
+    }
+    */
 
     public void Step()
     {
@@ -118,7 +127,8 @@ public class MarketNode
 
     public double FindRoot()
     {
-        return Secant.FindRoot(Objective, 1, 2); 
+        // return Secant.FindRoot(Objective, 1, 2, double.MinValue, double.MaxValue, 1E-6); 
+        return Bisection.FindRoot(Objective, 1e-6, 100, 1E-8); // TODO: relax upper bound
     }
 
     public void PostStep(double damping)
@@ -157,7 +167,7 @@ public class Dynamic
         {
             supplyThreshold = 0.2,
             supplyPower = 0.5,
-            costCoef = new double[] { 1, 1 } // Cotton, Workhour
+            costCoef = new double[] { 1.01, 1 } // Cotton, Workhour
         }
     };
 
@@ -167,7 +177,7 @@ public class Dynamic
         {
             supplyThreshold = 0,
             supplyPower = 0.7,
-            costCoef = new double[] { 1, 0.75 }
+            costCoef = new double[] { 1.05, 1 }
         }
     };
 
@@ -175,16 +185,17 @@ public class Dynamic
     {
         producer = new DopamineProducer()
         {
-            textileDemandCoef = 1,
-            costCoef = new double[] {1}
+            demandCoef = 1,
+            costCoef = new double[] { 1 }
         }
     };
 
-
     public double solverDamping = 0.5;
+    // public double solverDamping = 0.75;
     public int solverSteps = 1;
 
     public event EventHandler stepEvent;
+    public event EventHandler<Exception> errorEvent;
 
     public void Init()
     {
@@ -236,8 +247,16 @@ public class Dynamic
 
     public void Step()
     {
-        LogicStep();
-        stepEvent?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            LogicStep();
+            stepEvent?.Invoke(this, EventArgs.Empty);
+        }
+        catch(MathNet.Numerics.NonConvergenceException e)
+        {
+            errorEvent?.Invoke(this, e);
+            throw;
+        }
     }
 
     public void LogicStep()
@@ -282,8 +301,8 @@ public class DynamicBehaviour : MonoBehaviour
 {
     public Dynamic d = new Dynamic();
     public GameManager gameManager;
-    public int initLogicSteps = 0;
-    public int initSteps = 1;
+    public int initLogicSteps = 100;
+    public int initSteps = 0;
 
     // Use this for initialization
     // void Start()
