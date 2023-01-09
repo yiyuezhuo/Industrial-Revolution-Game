@@ -17,8 +17,8 @@ DemandCottonWorkshop &= CottonWorkshopCost \times WorkshopTextileSupply \\
 DemandCottonFactory &= CottonFactoryCost \times FactoryTextileSupply \\
 DemandWorkhourWorkshop &= WorkhourWorkshopCost \times WorkshopTextileSupply \\
 DenabdWorkhourFactory &= WorkhourFactoryCost \times FactoryTextileSupply \\
-WorkshopTextileSupply &= WorkshopTexileScale \times Max(TextilePrice - TextilePriceWorkshopThres, 0)^{TextileWorkshopPower} \\
-FactoryTextileSupply &= FactoryTextileScale \times Max(TextilePrice - TextilePriceFactoryThres, 0)^{TextileFactoryPower} \\
+WorkshopTextileSupply &= WorkshopTexileScale \times Max(TextilePrice - WorkhourWorkshopCost \times WorkhourPrice - CottonWorkshopCost \times CottonPrice - TextilePriceWorkshopThres, 0)^{TextileWorkshopPower} \\
+FactoryTextileSupply &= FactoryTextileScale \times Max(TextilePrice  - WorkhourFactoryCost \times WorkhourPrice - CottonFactoryCost \times CottonPrice - TextilePriceFactoryThres, 0)^{TextileFactoryPower} \\
 ConsumerDemand &= WorkshopTextileSupply + FactoryTextileSupply \\
 ConsumerDemand &= TextileDemandCoef / TextilePrice
 \end{align*}
